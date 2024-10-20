@@ -7,6 +7,8 @@ import AdminDashboard from "./pages/admin-view/dashboard";
 import AdminFeatures from "./pages/admin-view/features";
 import AdminOrders from "./pages/admin-view/orders";
 import AdminProducts from "./pages/admin-view/products";
+import ShoppingLayout from "./components/shopping-view/layout,";
+import NotFound from "./pages/not-found";
 
 function App() {
   return (
@@ -22,6 +24,9 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
         </Route>
+
+        <Route path="/shop" element={<ShoppingLayout />}></Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
