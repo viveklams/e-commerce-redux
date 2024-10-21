@@ -9,6 +9,10 @@ import AdminOrders from "./pages/admin-view/orders";
 import AdminProducts from "./pages/admin-view/products";
 import ShoppingLayout from "./components/shopping-view/layout,";
 import NotFound from "./pages/not-found";
+import ShoppingAccount from "./pages/shopping-view/account";
+import ShoppingCheckout from "./pages/shopping-view/checkout";
+import ShoppingHome from "./pages/shopping-view/home";
+import ShoppingListing from "./pages/shopping-view/listing";
 
 function App() {
   return (
@@ -25,7 +29,12 @@ function App() {
           <Route path="products" element={<AdminProducts />} />
         </Route>
 
-        <Route path="/shop" element={<ShoppingLayout />}></Route>
+        <Route path="/shop" element={<ShoppingLayout />}>
+          <Route path="account" element={<ShoppingAccount />} />
+          <Route path="checkout" element={<ShoppingCheckout />} />
+          <Route path="home" element={<ShoppingHome />} />
+          <Route path="listing" element={<ShoppingListing />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
