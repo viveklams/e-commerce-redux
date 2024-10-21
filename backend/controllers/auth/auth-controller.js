@@ -4,12 +4,12 @@ import User from "../../models/User.js";
 
 //register
 export const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
-
   //hash password
 
+  const { userName, email, password } = req.body;
+
   try {
-    const hashPassword = bcrypt.hash(password, 12);
+    const hashPassword = await bcrypt.hash(password, 12);
     const newUser = new User({
       userName,
       email,
@@ -19,10 +19,10 @@ export const registerUser = async (req, res) => {
     await newUser.save();
     res.status(200).json({
       success: true,
-      message: "registered successful",
+      message: "Registration successful",
     });
-  } catch (error) {
-    console.log(error);
+  } catch (e) {
+    console.log(e);
     res.status(500).json({
       success: false,
       message: "Some error occured",
