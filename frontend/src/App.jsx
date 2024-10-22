@@ -18,11 +18,7 @@ import NotFound from "./pages/not-found/index";
 
 function App() {
   const isAuthenticated = false;
-  const user = {
-    name: "vivek",
-    role: "user",
-  };
-
+  const user = null;
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>

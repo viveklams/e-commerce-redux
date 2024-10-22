@@ -1,7 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 import CommonForm from "@/components/common/form";
 import { loginFormControls } from "@/config";
+import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 const initialState = {
@@ -11,8 +13,17 @@ const initialState = {
 
 function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
 
-  function onSubmit() {}
+  function onSubmit(event) {
+    event.preventDefault();
+
+    dispatch(loginUser(formData))
+      .unwrap()
+      .then((data) => {
+        console.log(data);
+      });
+  }
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
@@ -21,7 +32,7 @@ function AuthLogin() {
           Sign in to your account
         </h1>
         <p className="mt-2">
-          Don't have an account ?
+          Don't have an account
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/register"

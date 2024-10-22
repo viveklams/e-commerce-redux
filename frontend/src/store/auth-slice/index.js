@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -24,6 +25,22 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const loginUser = createAsyncThunk(
+  "/auth/login",
+
+  async (formData) => {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      formData,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -32,6 +49,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //register
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -42,7 +60,23 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         (state.isLoading = false), (state.user = null);
         state.isAuthenticated = false;
+      })
+
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        console.log(action),
+          (state.isLoading = false),
+          (state.user = action.payload);
+        state.isAuthenticated = true;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        (state.isLoading = false), (state.user = null);
+        state.isAuthenticated = false;
       });
+
+    //login
   },
 });
 
