@@ -18,6 +18,7 @@ import NotFound from "./pages/not-found/index";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -29,7 +30,9 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return <Skeleton className="w-[100px] h-[20px] rounded-full" />;
+
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>

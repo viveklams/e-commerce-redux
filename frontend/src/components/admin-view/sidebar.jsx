@@ -1,5 +1,5 @@
 function AdminSideBar() {
-  return <div>admin sidebar</div>;
+  return <div>sideBar</div>;
 }
 
 export default AdminSideBar;
