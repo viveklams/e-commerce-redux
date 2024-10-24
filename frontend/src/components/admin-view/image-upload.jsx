@@ -1,17 +1,19 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Input } from "../ui/input"; // Assuming this is a custom component
 import { Label } from "../ui/label"; // Assuming this is a custom component
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import axios from "axios";
 
 function ProductImageUpload({
   imageFile,
   setImageFile,
   uploadedImageUrl,
   setUploadedImageUrl,
+  setImageLoadingState,
 }) {
   const inputRef = useRef(null);
 
@@ -45,6 +47,24 @@ function ProductImageUpload({
   }
 
   console.log(imageFile);
+
+  async function uploadImageToCloudinary() {
+    setImageLoadingState(true);
+    const data = new FormData();
+    data.append("my_file", imageFile);
+    const response = await axios.post(
+      "http://localhost:5000/api/admin/products/upload-image",
+      data
+    );
+    console.log(response, "response");
+    if (response.data?.success) {
+      setUploadedImageUrl(response.data.result.url)
+      setImageLoadingState(false)
+  }
+
+  useEffect(() => {
+    if (imageFile !== null) uploadImageToCloudinary();
+  }, [imageFile]);
 
   return (
     <div className="w-full max-w-md mx-auto mt-4">
