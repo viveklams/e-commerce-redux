@@ -1,3 +1,4 @@
+import ProductImageUpload from "@/components/admin-view/image-upload";
 import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +19,7 @@ const initialFormData = {
   price: "",
   salePrice: "",
   totalStock: "",
-  averageReview: 0,
+  //averageReview: 0,
 };
 
 const AdminProducts = () => {
@@ -26,6 +27,8 @@ const AdminProducts = () => {
     useState(false);
 
   const [formData, setFormData] = useState(initialFormData);
+  const [imageFile, setImageFile] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
 
   function onSubmit() {}
 
@@ -47,6 +50,12 @@ const AdminProducts = () => {
           <SheetHeader>
             <SheetTitle>Add New Product</SheetTitle>
           </SheetHeader>
+          <ProductImageUpload
+            imageFile={imageFile} // This is correct
+            setImageFile={setImageFile}
+            uploadedImageUrl={uploadedImageUrl}
+            setUploadedImageUrl={setUploadedImageUrl}
+          />
           <div className="py-6">
             <CommonForm
               onSubmit={onSubmit}
