@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import ProductImageUpload from "@/components/admin-view/image-upload";
 import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,7 @@ const AdminProducts = () => {
             setImageFile={setImageFile}
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
+            setImageLoadingState={setImageLoadingState}
           />
           <div className="py-6">
             <CommonForm

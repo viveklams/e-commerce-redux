@@ -58,8 +58,9 @@ function ProductImageUpload({
     );
     console.log(response, "response");
     if (response.data?.success) {
-      setUploadedImageUrl(response.data.result.url)
-      setImageLoadingState(false)
+      setUploadedImageUrl(response.data.result.url);
+      setImageLoadingState(false);
+    }
   }
 
   useEffect(() => {
