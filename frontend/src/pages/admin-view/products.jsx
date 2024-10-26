@@ -13,6 +13,7 @@ import {
 import { addProductFormElements } from "@/config";
 import { useToast } from "@/hooks/use-toast";
 import { addNewProduct, fetchAllProducts } from "@/store/admin/products-slice";
+import { current } from "@reduxjs/toolkit";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const initialFormData = {
@@ -61,7 +62,7 @@ const AdminProducts = () => {
       }
     });
   }
-  console.log(productList, uploadedImageUrl, "productList");
+  console.log(formData, "productList");
 
   useEffect(() => {
     dispatch(fetchAllProducts());
@@ -91,11 +92,15 @@ const AdminProducts = () => {
         open={openCreateProductsDialog}
         onOpenChange={() => {
           setOpenCreateProductsDialog(false);
+          setCurrentEditedId(null);
+          setFormData(initialFormData);
         }}
       >
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
-            <SheetTitle>Add New Product</SheetTitle>
+            <SheetTitle>
+              {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+            </SheetTitle>
           </SheetHeader>
           <ProductImageUpload
             imageFile={imageFile} // This is correct
@@ -111,7 +116,7 @@ const AdminProducts = () => {
               onSubmit={onSubmit}
               formData={formData}
               setFormData={setFormData}
-              buttonText="Add"
+              buttonText={currentEditedId !== null ? "Edit" : "Add"}
               formControls={addProductFormElements}
             />
           </div>
