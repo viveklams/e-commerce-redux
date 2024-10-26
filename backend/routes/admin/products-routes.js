@@ -31,6 +31,7 @@ router.post(
       res.status(500).json({
         success: false,
         message: "An error occurred during the upload process.",
+        error: error.message,
       });
     }
   }

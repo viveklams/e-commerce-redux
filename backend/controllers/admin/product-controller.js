@@ -1,8 +1,9 @@
 import { imageUploadUtil } from "../../helpers/cloudinary.js";
+import Product from "../../models/Product.js";
 
+// Handle image upload
 export const handleImageUpload = async (req, res) => {
   try {
-    // Check if the file exists
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -12,23 +13,22 @@ export const handleImageUpload = async (req, res) => {
 
     // Convert the file buffer to base64
     const b64 = Buffer.from(req.file.buffer).toString("base64");
-    const url = `data:${req.file.mimetype};base64,${b64}`; // Fixed `mimtype` to `mimetype`
+    const url = `data:${req.file.mimetype};base64,${b64}`;
 
     // Upload the image to Cloudinary
     const result = await imageUploadUtil(url);
 
-    // Check the result from Cloudinary
     if (!result || !result.secure_url) {
       throw new Error("Image upload failed.");
     }
 
-    // Respond with success
-    res.json({
+    res.status(200).json({
       success: true,
+      imageUrl: result.secure_url,
       result,
     });
   } catch (error) {
-    console.error("Image upload error:", error); // Log the error for debugging
+    console.error("Image upload error:", error);
     res.status(500).json({
       success: false,
       message: "Image upload failed. Please try again later.",
@@ -37,7 +37,7 @@ export const handleImageUpload = async (req, res) => {
   }
 };
 
-//add a product
+// Add a product
 export const addProduct = async (req, res) => {
   try {
     const {
@@ -63,17 +63,23 @@ export const addProduct = async (req, res) => {
     });
 
     await newlyCreatedProduct.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Product added successfully.",
+      data: newlyCreatedProduct,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Add product error:", error);
     res.status(500).json({
       success: false,
-      message: "error occured",
+      message: "Error occurred while adding the product.",
     });
   }
 };
 
-//fetch all products
-export const fetchAllProduct = async (req, res) => {
+// Fetch all products
+export const fetchAllProducts = async (req, res) => {
   try {
     const listOfProducts = await Product.find({});
     res.status(200).json({
@@ -81,14 +87,15 @@ export const fetchAllProduct = async (req, res) => {
       data: listOfProducts,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Fetch products error:", error);
     res.status(500).json({
       success: false,
-      message: "error occured",
+      message: "Error occurred while fetching products.",
     });
   }
 };
 
+// Edit a product
 export const editProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,12 +109,14 @@ export const editProduct = async (req, res) => {
       salePrice,
       totalStock,
     } = req.body;
+
     const findProduct = await Product.findById(id);
-    if (!findProduct)
+    if (!findProduct) {
       return res.status(404).json({
-        succcess: false,
-        message: "Product not found",
+        success: false,
+        message: "Product not found.",
       });
+    }
 
     findProduct.title = title || findProduct.title;
     findProduct.description = description || findProduct.description;
@@ -121,36 +130,40 @@ export const editProduct = async (req, res) => {
     await findProduct.save();
     res.status(200).json({
       success: true,
+      message: "Product updated successfully.",
       data: findProduct,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Edit product error:", error);
     res.status(500).json({
       success: false,
+      message: "Error occurred while updating the product.",
     });
   }
 };
 
+// Delete a product
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
 
-    if (!product)
+    if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Product not found.",
       });
+    }
 
     res.status(200).json({
       success: true,
-      message: "Product delete successfully",
+      message: "Product deleted successfully.",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Delete product error:", error);
     res.status(500).json({
       success: false,
-      message: "Error Occured",
+      message: "Error occurred while deleting the product.",
     });
   }
 };
