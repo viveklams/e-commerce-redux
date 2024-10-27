@@ -39,7 +39,14 @@ router.post(
 
 router.post("/add", addProduct);
 router.put("/edit/:id", editProduct);
-router.delete("/delete/:id", deleteProduct);
+router.delete(
+  "/delete/:id",
+  (req, res, next) => {
+    console.log("Delete request received for ID:", req.params.id);
+    next();
+  },
+  deleteProduct
+);
 router.get("/get", fetchAllProducts);
 
 export default router;

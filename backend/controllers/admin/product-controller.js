@@ -144,6 +144,7 @@ export const editProduct = async (req, res) => {
 };
 
 // Delete a product
+// Delete a product
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -161,7 +162,7 @@ export const deleteProduct = async (req, res) => {
       message: "Product deleted successfully.",
     });
   } catch (error) {
-    console.error("Delete product error:", error);
+    console.error("Delete product error:", error.message, error.stack);
     res.status(500).json({
       success: false,
       message: "Error occurred while deleting the product.",
