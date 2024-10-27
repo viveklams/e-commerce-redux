@@ -58,22 +58,25 @@ export const editProduct = createAsyncThunk(
 );
 
 export const deleteProduct = createAsyncThunk(
-  "/products/deleteProduct",
-  async (id) => {
-    const result = await axios.delete(
-      `http://localhost:5000/api/admin/products/delete/${id}`
-    );
-
-    return result?.data;
+  "products/deleteProduct",
+  async (id, { rejectWithValue }) => {
+    try {
+      const result = await axios.delete(
+        `http://localhost:5000/api/admin/products/delete/${id}`
+      );
+      return result.data; // This should return success message or deleted product info
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Handle error case
+    }
   }
 );
-
 const AdminProductsSlice = createSlice({
   name: "adminProducts",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Fetch all products
       .addCase(fetchAllProducts.pending, (state) => {
         state.isLoading = true;
       })
@@ -88,4 +91,5 @@ const AdminProductsSlice = createSlice({
       });
   },
 });
+
 export default AdminProductsSlice.reducer;
