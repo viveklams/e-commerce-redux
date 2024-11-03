@@ -4,10 +4,12 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   productList: [],
+  error: null, // Add an error field to manage error messages
 };
 
+// Thunk to add a new product
 export const addNewProduct = createAsyncThunk(
-  "/products/addnewproduct",
+  "products/addNewProduct",
   async (formData, { rejectWithValue }) => {
     try {
       const result = await axios.post(
@@ -22,41 +24,52 @@ export const addNewProduct = createAsyncThunk(
           },
         }
       );
-      return result?.data;
+      return result.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to add product.");
     }
   }
 );
 
+// Thunk to fetch all products
 export const fetchAllProducts = createAsyncThunk(
-  "/products/fetchAllProducts",
-  async () => {
-    const result = await axios.get(
-      "http://localhost:5000/api/admin/products/get"
-    );
-
-    return result?.data;
+  "products/fetchAllProducts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/admin/products/get"
+      );
+      return result.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch products."
+      );
+    }
   }
 );
 
+// Thunk to edit a product
 export const editProduct = createAsyncThunk(
-  "/products/editProduct",
-  async ({ id, formData }) => {
-    const result = await axios.put(
-      `http://localhost:5000/api/admin/products/edit/${id}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return result?.data;
+  "products/editProduct",
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const result = await axios.put(
+        `http://localhost:5000/api/admin/products/edit/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return result.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to edit product.");
+    }
   }
 );
 
+// Thunk to delete a product
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, { rejectWithValue }) => {
@@ -64,12 +77,15 @@ export const deleteProduct = createAsyncThunk(
       const result = await axios.delete(
         `http://localhost:5000/api/admin/products/delete/${id}`
       );
-      return result.data; // This should return success message or deleted product info
+      return result.data;
     } catch (error) {
-      return rejectWithValue(error.response.data); // Handle error case
+      return rejectWithValue(
+        error.response?.data || "Failed to delete product."
+      );
     }
   }
 );
+
 const AdminProductsSlice = createSlice({
   name: "adminProducts",
   initialState,
@@ -79,6 +95,7 @@ const AdminProductsSlice = createSlice({
       // Fetch all products
       .addCase(fetchAllProducts.pending, (state) => {
         state.isLoading = true;
+        state.error = null; // Clear any previous errors
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -87,7 +104,57 @@ const AdminProductsSlice = createSlice({
       .addCase(fetchAllProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.productList = [];
-        state.error = action.error?.message || "Failed to fetch products";
+        state.error = action.payload || action.error.message;
+      })
+
+      // Add new product
+      .addCase(addNewProduct.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(addNewProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.productList.push(action.payload); // Assuming payload is the new product
+      })
+      .addCase(addNewProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+
+      // Edit product
+      .addCase(editProduct.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(editProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const updatedProduct = action.payload;
+        const index = state.productList.findIndex(
+          (product) => product.id === updatedProduct.id
+        );
+        if (index !== -1) {
+          state.productList[index] = updatedProduct;
+        }
+      })
+      .addCase(editProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+
+      // Delete product
+      .addCase(deleteProduct.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.productList = state.productList.filter(
+          (product) => product.id !== action.meta.arg
+        );
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
       });
   },
 });

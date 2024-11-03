@@ -1,5 +1,5 @@
 const ShoppingAccount = () => {
-  return <div>ShoppingAccount</div>;
+  return <div>Shopping Account page</div>;
 };
 
 export default ShoppingAccount;

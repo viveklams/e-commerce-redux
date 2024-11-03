@@ -7,7 +7,6 @@ import AdminDashboard from "./pages/admin-view/dashboard";
 import AdminFeatures from "./pages/admin-view/features";
 import AdminOrders from "./pages/admin-view/orders";
 import AdminProducts from "./pages/admin-view/products";
-import ShoppingLayout from "./components/shopping-view/layout,";
 import ShoppingAccount from "./pages/shopping-view/account";
 import ShoppingCheckout from "./pages/shopping-view/checkout";
 import ShoppingHome from "./pages/shopping-view/home";
@@ -19,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
+import ShoppingLayout from "./components/shopping-view/layout";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -27,6 +27,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("Dispatching checkAuth");
     dispatch(checkAuth());
   }, [dispatch]);
 
@@ -69,10 +70,13 @@ function App() {
             </CheckAuth>
           }
         >
-          <Route path="account" element={<ShoppingAccount />} />
-          <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="home" element={<ShoppingHome />} />
           <Route path="listing" element={<ShoppingListing />} />
+          <Route path="checkout" element={<ShoppingCheckout />} />
+          <Route path="account" element={<ShoppingAccount />} />
+          {/* <Route path="paypal-return" element={<PaypalReturnPage />} />
+          <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="search" element={<SearchProducts />} /> */}
         </Route>
         <Route path="/unauth-page" element={<UnauthPage />} />
         <Route path="*" element={<NotFound />} />

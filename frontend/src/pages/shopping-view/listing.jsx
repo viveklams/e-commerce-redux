@@ -1,5 +1,5 @@
 const ShoppingListing = () => {
-  return <div>ShoppingListing</div>;
+  return <div>Shopping listing page</div>;
 };
 
 export default ShoppingListing;
