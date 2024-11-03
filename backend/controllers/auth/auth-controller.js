@@ -76,7 +76,7 @@ export const loginUser = async (req, res) => {
         userName: checkUser.userName,
       },
       "CLIENT_SECRET_KEY",
-      { expiresIn: "60m" }
+      { expiresIn: "15m" }
     );
 
     res.cookie("token", token, { httpOnly: true, secure: false }).json({
@@ -86,6 +86,7 @@ export const loginUser = async (req, res) => {
         email: checkUser.email,
         role: checkUser.role,
         id: checkUser._id,
+        username: checkUser.userName,
       },
     });
   } catch (error) {
