@@ -2,6 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { brandOptionsMap, categoryOptionsMap } from "./../../config/index";
 
 function ShoppingProductTile({ product }) {
   return (
@@ -23,10 +24,10 @@ function ShoppingProductTile({ product }) {
           <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
           <div className="flex justify-between items-center mb-2">
             <span className="text-[16px] text-muted-foreground">
-              {product?.category}
+              {categoryOptionsMap[product?.category]}
             </span>
             <span className="text-[16px] text-muted-foreground">
-              {product?.brand}
+              {brandOptionsMap[product?.brand]}
             </span>
           </div>
 
@@ -36,7 +37,7 @@ function ShoppingProductTile({ product }) {
                 product?.salePrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
-              {product?.price}
+              ₹{product?.price}
             </span>
             {product?.salePrice > 0 ? (
               <span className="text-lg font-semibold text-primary">
