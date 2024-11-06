@@ -8,21 +8,23 @@ const initialState = {
   error: null,
 };
 
-// Async thunk to fetch all filtered products
 export const fetchAllFilteredProducts = createAsyncThunk(
-  "products/fetchAllProducts",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/shop/products/get"
-      );
-      return response.data; // Return the data directly from the response
-    } catch (error) {
-      // Handle errors and return a meaningful message
-      return rejectWithValue(
-        error.response?.data || "Failed to fetch products."
-      );
-    }
+  "/products/fetchAllProducts",
+  async ({ filterParams, sortParams }) => {
+    console.log(fetchAllFilteredProducts, "fetchAllFilteredProducts");
+
+    const query = new URLSearchParams({
+      ...filterParams,
+      sortBy: sortParams,
+    });
+
+    const result = await axios.get(
+      `http://localhost:5000/api/shop/products/get?${query}`
+    );
+
+    console.log(result);
+
+    return result?.data;
   }
 );
 

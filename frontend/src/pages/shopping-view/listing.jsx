@@ -77,17 +77,12 @@ const ShoppingListing = () => {
   }, [filters]);
 
   //for fetchAllFilteredProducts
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await dispatch(fetchAllFilteredProducts()).unwrap();
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      }
-    };
-    fetchData();
-  }, [dispatch]);
+    if (filters !== null && sort !== null)
+      dispatch(
+        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
+      );
+  }, [dispatch, sort, filters]);
 
   console.log(filters, searchParams, "filters");
   return (
