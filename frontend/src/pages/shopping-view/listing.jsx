@@ -14,13 +14,28 @@ import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ShoppingProductTile from "./product-tile";
+import { useSearchParams } from "react-router-dom";
 
+//helper function for  Params
+function createSearchParamsHelper(filterParams) {
+  const queryParams = [];
+
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",");
+
+      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+    }
+  }
+
+  return queryParams.join("&");
+}
 const ShoppingListing = () => {
   const dispatch = useDispatch();
   const { productList } = useSelector((state) => state.shoppingProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
-
+  const [searchParams, setSearchParams] = useSearchParams();
   function handleSort(value) {
     setSort(value);
   }
@@ -46,10 +61,22 @@ const ShoppingListing = () => {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
+  //for session storage
   useEffect(() => {
     setSort("price-lowtohigh");
+
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
   }, []);
+
+  // for parameters
+  useEffect(() => {
+    if (filters && Object.keys(filters).length > 0) {
+      const createQueryString = createSearchParamsHelper(filters);
+      setSearchParams(new URLSearchParams(createQueryString));
+    }
+  }, [filters]);
+
+  //for fetchAllFilteredProducts
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +89,7 @@ const ShoppingListing = () => {
     fetchData();
   }, [dispatch]);
 
-  console.log(filters, "filters");
+  console.log(filters, searchParams, "filters");
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <Productfilter filters={filters} handleFilter={handleFilter} />
