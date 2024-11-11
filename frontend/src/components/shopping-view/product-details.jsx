@@ -5,7 +5,7 @@ import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { Separator } from "../ui/separator";
-import { StarIcon, StarsIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
