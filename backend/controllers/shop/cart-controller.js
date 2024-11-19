@@ -1,5 +1,5 @@
+import Product from "../../models/Product.js";
 import Cart from "./../../models/Cart.js";
-import Product from "./../../models/Product.js";
 
 export const addToCart = async (req, res) => {
   try {
@@ -17,7 +17,7 @@ export const addToCart = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "product not found!",
+        message: "Product not found",
       });
     }
 
@@ -38,7 +38,6 @@ export const addToCart = async (req, res) => {
     }
 
     await cart.save();
-
     res.status(200).json({
       success: true,
       data: cart,
@@ -52,19 +51,19 @@ export const addToCart = async (req, res) => {
   }
 };
 
-export const fetchCardItems = async (req, res) => {
+export const fetchCartItems = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.params;
+    const { userId } = req.params;
 
-    if (!userId || !productId || quantity <= 0) {
+    if (!userId) {
       return res.status(400).json({
         success: false,
-        message: "User id is mandatory!",
+        message: "User id is manadatory!",
       });
     }
 
     const cart = await Cart.findOne({ userId }).populate({
-      path: "item.productId",
+      path: "items.productId",
       select: "image title price salePrice",
     });
 
@@ -111,14 +110,15 @@ export const fetchCardItems = async (req, res) => {
 
 export const updateCartItemQty = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.params;
+    const { userId, productId, quantity } = req.body;
 
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({
         success: false,
-        message: "User id is mandatory!",
+        message: "Invalid data provided!",
       });
     }
+
     const cart = await Cart.findOne({ userId });
     if (!cart) {
       return res.status(404).json({
@@ -126,6 +126,7 @@ export const updateCartItemQty = async (req, res) => {
         message: "Cart not found!",
       });
     }
+
     const findCurrentProductIndex = cart.items.findIndex(
       (item) => item.productId.toString() === productId
     );
@@ -133,7 +134,7 @@ export const updateCartItemQty = async (req, res) => {
     if (findCurrentProductIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: "Cart item not present!",
+        message: "Cart item not present !",
       });
     }
 
@@ -176,7 +177,7 @@ export const deleteCartItem = async (req, res) => {
     if (!userId || !productId) {
       return res.status(400).json({
         success: false,
-        message: "User id is mandatory!",
+        message: "Invalid data provided!",
       });
     }
 
