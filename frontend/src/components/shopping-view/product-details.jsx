@@ -7,10 +7,44 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { Separator } from "../ui/separator";
 import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "@/store/shop/cart-slice";
+import { fetchCartItems } from "@/store/shop/cart-slice";
+import { useToast } from "@/hooks/use-toast";
+import { setProductDetails } from "@/store/shop/products-slice";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+  //add to Cart
+  function handleAddToCart(getCurrentProductId) {
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    )
+      .then((data) => {
+        if (data?.payload?.success) {
+          dispatch(fetchCartItems(user?.id));
+          toast({
+            title: "Product is added to cart",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to add to cart:", error);
+      });
+  }
+
+  function handleDialogClose() {
+    setOpen(false);
+    dispatch(setProductDetails());
+  }
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="flex flex-col sm:flex-row items-start gap-8 p-6 max-w-[90vw] sm:max-w-[800px] rounded-lg shadow-xl bg-white border border-gray-300">
         {/* Image Section */}
         <div className="w-full sm:w-[50%] h-64 sm:h-[400px] overflow-hidden rounded-lg">
@@ -55,7 +89,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             <span className="text-muted-foreground">(4.5)</span>
           </div>
           <div className="flex justify-center mt-4">
-            <Button className="w-full">Add to Cart</Button>
+            <Button
+              className="w-full"
+              onClick={() => handleAddToCart(productDetails?._id)}
+            >
+              Add to Cart
+            </Button>
           </div>
 
           <Separator className="my-4" />

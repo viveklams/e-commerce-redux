@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ShoppingProductTile from "../../components/shopping-view/product-tile";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { useToast } from "@/hooks/use-toast";
 
 //helper function for  Params
 function createSearchParamsHelper(filterParams) {
@@ -36,6 +38,7 @@ function createSearchParamsHelper(filterParams) {
 }
 const ShoppingListing = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const { productList, productDetails } = useSelector(
     (state) => state.shoppingProducts
   );
@@ -44,6 +47,7 @@ const ShoppingListing = () => {
   // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { toast } = useToast();
 
   function handleSort(value) {
     setSort(value);
@@ -76,6 +80,27 @@ const ShoppingListing = () => {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
+  function handleAddtoCart(getCurrentProductId) {
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    )
+      .then((data) => {
+        if (data?.payload?.success) {
+          dispatch(fetchCartItems(user?.id));
+          toast({
+            title: "Product is added to cart",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to add to cart:", error);
+      });
+  }
+
   //for session storage
   useEffect(() => {
     setSort("price-lowtohigh");
@@ -104,7 +129,6 @@ const ShoppingListing = () => {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
 
-  console.log(productDetails, "productDetails");
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <Productfilter filters={filters} handleFilter={handleFilter} />
@@ -149,6 +173,7 @@ const ShoppingListing = () => {
                   handleGetProductDetails={handleGetProductDetails}
                   key={productItem.id}
                   product={productItem}
+                  handleAddtoCart={handleAddtoCart}
                 />
               ))
             : null}

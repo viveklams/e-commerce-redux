@@ -45,11 +45,8 @@ const shoppingProductSlice = createSlice({
   name: "shoppingProducts",
   initialState,
   reducers: {
-    resetProducts: (state) => {
-      // Action to reset the product list and loading state
-      state.productList = [];
-      state.isLoading = false;
-      state.error = null;
+    setProductDetails: (state) => {
+      state.productDetails = null;
     },
   },
   extraReducers: (builder) => {
@@ -82,7 +79,8 @@ const shoppingProductSlice = createSlice({
 });
 
 // Export the reset action
-export const { resetProducts } = shoppingProductSlice.actions;
+export const { setProductDetails, resetProducts } =
+  shoppingProductSlice.actions;
 
 // Export the reducer
 export default shoppingProductSlice.reducer;
