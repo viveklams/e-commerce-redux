@@ -3,6 +3,7 @@ import CommonForm from "../common/form";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { addressFormControls } from "@/config";
 import { useDispatch, useSelector } from "react-redux";
+import { addNewAddress } from "@/store/shop/address-slice";
 
 const initialAddressFormData = {
   address: "",
@@ -20,6 +21,15 @@ function Address() {
   //Managge Address
   function handleManageAddress(event) {
     event.preventDefault();
+
+    dispatch(
+      addNewAddress({
+        ...formData,
+        userId: user?.id,
+      })
+    ).then((data) => {
+      console.log(data);
+    });
   }
 
   function isFormValid() {
