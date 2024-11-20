@@ -20,6 +20,7 @@ const initialAddressFormData = {
 
 function Address() {
   const [formData, setFormData] = useState(initialAddressFormData);
+  const [currentEditedId, setCurrentEditedId] = useState(null);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { addressList } = useSelector((state) => state.shopAddress);
@@ -72,7 +73,8 @@ function Address() {
               // eslint-disable-next-line react/jsx-key
               <AddressCard
                 handleDeleteAddress={handleDeleteAddress}
-                addressInfo={singleAddressItem}
+                setCurrentEditedId={setCurrentEditedId}
+                handleEditAddress={handleEditAddress}
               />
             ))
           : null}

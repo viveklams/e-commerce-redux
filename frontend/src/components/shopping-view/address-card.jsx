@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 function AddressCard({
   addressInfo,
   handleDeleteAddress,
-  //   handleEditAddress,
+  handleEditAddress,
   setCurrentSelectedAddress,
   selectedId,
 }) {
@@ -31,7 +31,8 @@ function AddressCard({
         <Label>Notes : {addressInfo?.notes}</Label>
       </CardContent>
       <CardFooter className="p-3 flex justify-between">
-        <Button>Edit</Button>
+        <Button onClick={() => handleEditAddress(addressInfo)}>Edit</Button>
+
         <Button onClick={() => handleDeleteAddress(addressInfo)}>Delete</Button>
       </CardFooter>
     </Card>
