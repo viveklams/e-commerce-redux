@@ -3,7 +3,11 @@ import CommonForm from "../common/form";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { addressFormControls } from "@/config";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewAddress, fetchAllAddresses } from "@/store/shop/address-slice";
+import {
+  addNewAddress,
+  deleteAddress,
+  fetchAllAddresses,
+} from "@/store/shop/address-slice";
 import AddressCard from "./address-card";
 
 const initialAddressFormData = {
@@ -37,6 +41,17 @@ function Address() {
     });
   }
 
+  //Delete Functionaltiy
+  function handleDeleteAddress(getCurrentAddress) {
+    dispatch(
+      deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchAllAddresses(user?.id));
+      }
+    });
+  }
+
   function isFormValid() {
     return Object.keys(formData)
       .map((key) => formData[key].trim() !== "")
@@ -55,7 +70,10 @@ function Address() {
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               // eslint-disable-next-line react/jsx-key
-              <AddressCard addressInfo={singleAddressItem} />
+              <AddressCard
+                handleDeleteAddress={handleDeleteAddress}
+                addressInfo={singleAddressItem}
+              />
             ))
           : null}
       </div>
