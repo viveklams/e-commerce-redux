@@ -2,6 +2,7 @@ import { useState } from "react";
 import CommonForm from "../common/form";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { addressFormControls } from "@/config";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialAddressFormData = {
   address: "",
@@ -13,6 +14,8 @@ const initialAddressFormData = {
 
 function Address() {
   const [formData, setFormData] = useState(initialAddressFormData);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   //Managge Address
   function handleManageAddress(event) {
