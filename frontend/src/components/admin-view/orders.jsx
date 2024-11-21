@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "../ui/table";
 
-function ShoppingOrders() {
+function AdminOrdersView() {
   return (
     <Card>
       <CardHeader>
@@ -45,4 +45,4 @@ function ShoppingOrders() {
   );
 }
 
-export default ShoppingOrders;
+export default AdminOrdersView;
