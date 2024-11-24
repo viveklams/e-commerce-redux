@@ -70,11 +70,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 productDetails?.salePrice > 0 ? "line-through" : ""
               }`}
             >
-              ₹{productDetails?.price}
+              ${productDetails?.price}
             </p>
             {productDetails?.salePrice > 0 && (
               <p className="text-2xl font-bold text-primary">
-                ₹{productDetails?.salePrice}
+                ${productDetails?.salePrice}
               </p>
             )}
           </div>

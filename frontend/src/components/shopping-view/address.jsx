@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import CommonForm from "../common/form";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -20,7 +21,7 @@ const initialAddressFormData = {
   notes: "",
 };
 
-function Address() {
+function Address({ setCurrentSelectedAddress }) {
   const [formData, setFormData] = useState(initialAddressFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const dispatch = useDispatch();
@@ -133,6 +134,7 @@ function Address() {
               setCurrentEditedId={setCurrentEditedId}
               handleEditAddress={handleEditAddress}
               addressInfo={singleAddressItem}
+              setCurrentSelectedAddress={setCurrentSelectedAddress}
             />
           ))
         ) : (
