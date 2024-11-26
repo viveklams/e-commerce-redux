@@ -35,9 +35,25 @@ const ShoppingCheckout = () => {
       : 0;
 
   function handleInitiatePaypalPayment() {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Your Cart is Empty. Please add items to proceed ",
+        variant: "destructive",
+      });
+
+      return;
+    }
+
+    if (currentSelectedAddress === null) {
+      toast({
+        title: "Please select one address to proceed",
+        variant: "destructive",
+      });
+
+      return;
+    }
     const orderData = {
       userId: user?.id,
-      cartId: cartItems?._id,
       cartItems: cartItems.items.map((singleCartItem) => ({
         productId: singleCartItem?.productId,
         title: singleCartItem?.title,
@@ -65,6 +81,8 @@ const ShoppingCheckout = () => {
       paymentId: "",
       payerId: "",
     };
+
+    console.log(orderData);
 
     dispatch(createNewOrder(orderData)).then((data) => {
       console.log(data, "vivek");

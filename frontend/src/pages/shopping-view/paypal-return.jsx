@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-function PayPalReturnPage() {
+function PaypalReturnPage() {
   const dispatch = useDispatch();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -14,10 +14,11 @@ function PayPalReturnPage() {
   useEffect(() => {
     if (paymentId && payerId) {
       const orderId = JSON.parse(sessionStorage.getItem("currentOrderId"));
+
       dispatch(capturePayment({ paymentId, payerId, orderId })).then((data) => {
         if (data?.payload?.success) {
           sessionStorage.removeItem("currentOrderId");
-          window.location.href = "/shop/payment-success ";
+          window.location.href = "/shop/payment-success";
         }
       });
     }
@@ -26,9 +27,10 @@ function PayPalReturnPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Processing Payment....Please Wait</CardTitle>
+        <CardTitle>Processing Payment...Please wait!</CardTitle>
       </CardHeader>
     </Card>
   );
 }
-export default PayPalReturnPage;
+
+export default PaypalReturnPage;
