@@ -19,7 +19,7 @@ import {
 } from "@/store/admin/order-slice/index";
 import { Badge } from "../ui/badge";
 
-function AdminOrdersView({ orderDetails }) {
+function AdminOrdersView() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
@@ -70,6 +70,8 @@ function AdminOrdersView({ orderDetails }) {
                         className={`py-1 px-3 ${
                           orderItem?.orderStatus === "confirmed"
                             ? "bg-green-500"
+                            : orderItem?.orderStatus === "rejected"
+                            ? "bg-red-600"
                             : "bg-black"
                         }`}
                       >
