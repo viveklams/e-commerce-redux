@@ -21,7 +21,6 @@ import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/hooks/use-toast";
-import { getOrderDetails } from "@/store/shop/order-slice";
 
 //helper function for  Params
 function createSearchParamsHelper(filterParams) {

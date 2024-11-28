@@ -32,12 +32,15 @@ import { Label } from "../ui/label";
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
   function handleNavigate(getCurrentMenuItem) {
     sessionStorage.removeItem("filters");
     const currentFilter =
-      getCurrentMenuItem.id !== "home" && getCurrentMenuItem.id !== "products"
+      getCurrentMenuItem.id !== "home" &&
+      getCurrentMenuItem.id !== "products" &&
+      getCurrentMenuItem.id !== "search"
         ? {
             category: [getCurrentMenuItem.id],
           }
