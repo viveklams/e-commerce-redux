@@ -31,7 +31,7 @@ function AdminProductTile({
                 salePrice > 0 ? "line-through" : ""
               }`}
             >
-              ₹{price}
+              ${price}
             </span>
             {salePrice > 0 && (
               <span className="text-lg font-bold">₹{salePrice}</span>
