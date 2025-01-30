@@ -6,8 +6,16 @@ import { useDispatch } from "react-redux";
 import { registerUser } from "@/store/auth-slice";
 import { useToast } from "@/hooks/use-toast";
 
+// const initialState = {
+//   userName: "",
+//   phoneNumber: "", // Added field
+//   email: "",
+//   password: "",
+//   rationNumber: "", // Added field
+// };
 const initialState = {
   userName: "",
+  phoneNumber: "",
   email: "",
   password: "",
 };
@@ -21,16 +29,35 @@ function AuthRegister() {
   function onSubmit(event) {
     event.preventDefault();
     dispatch(registerUser(formData)).then((data) => {
-      if (data?.payload?.success) {
+      console.log("Response payload:", data?.payload);
+      const message = data?.payload?.message || "An unexpected error occurred";
+      const success = data?.payload?.success;
+
+      if (success) {
+        // Success toast
         toast({
-          title: data?.payload?.message,
+          title: message,
+          variant: "default",
         });
-        navigate("/auth/login");
+        // Navigate to login after toast
+        setTimeout(() => navigate("/auth/login"), 1000);
       } else {
-        toast({
-          title: data?.payload?.message,
-          variant: "destructive",
-        });
+        // Handle validation errors
+        const errors = data?.payload?.errors || [];
+        if (errors.length > 0) {
+          errors.forEach((err) =>
+            toast({
+              title: err.msg, // Show individual validation error
+              variant: "destructive",
+            })
+          );
+        } else {
+          // General error message
+          toast({
+            title: message,
+            variant: "destructive",
+          });
+        }
       }
     });
   }
@@ -40,11 +67,11 @@ function AuthRegister() {
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <h1 className="text-3xl text-white font-bold tracking-tight text-foreground">
           Create new account
         </h1>
-        <p className="mt-2">
-          Already have an account
+        <p className="mt-2 text-white">
+          Already have an account ?
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/login"
