@@ -13,7 +13,7 @@ import shopSearchRouter from "./routes/shop/search-routes.js";
 import shopReviewRouter from "./routes/shop/review-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
 
-import { dotenv } from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
 
 //create database connection
