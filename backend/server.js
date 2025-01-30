@@ -12,11 +12,13 @@ import adminOrderRouter from "./routes/admin/order-routes.js";
 import shopSearchRouter from "./routes/shop/search-routes.js";
 import shopReviewRouter from "./routes/shop/review-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
+
+import { dotenv } from "dotenv";
+dotenv.config();
+
 //create database connection
 mongoose
-  .connect(
-    "mongodb+srv://vivekbiswakarma2001:iuk0Bd9EA3O9Iozf@cluster0.zkki4.mongodb.net/"
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDb connected"))
   .catch((error) => console.log(error));
 
@@ -24,7 +26,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_BASE_URL,
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",

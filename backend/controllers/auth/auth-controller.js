@@ -1,37 +1,76 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/User.js";
+import { validationResult } from "express-validator";
+import validationSchemas from "../../validators/userValidation.js";
+import { checkSchema } from "express-validator";
+import sendMail from "../../helpers/sendMail.js";
 
-//register
+export const userValidationSchema = validationSchemas.userValidationSchema;
+
+// Middleware to validate user input
+export const validateUser = checkSchema(userValidationSchema);
+
 export const registerUser = async (req, res) => {
-  //hash password
+  const { userName, email, password, phoneNumber } = req.body;
 
-  let { userName, email, password } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(), // Send validation errors as an array
+    });
+  }
 
   try {
-    const checkUser = await User.findOne({ email });
-    if (checkUser)
-      return res.json({
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({
         success: false,
-        message: "User Already exists with the same email! Please try again",
+        message: "User already exists with the same email! Please try again.",
       });
+    }
+
+    const existingMobile = await User.findOne({ phoneNumber });
+    if (existingMobile) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "User already exists with the same mobile number! Please try again.",
+      });
+    }
+
     const hashPassword = await bcrypt.hash(password, 12);
+
     const newUser = new User({
       userName,
+      phoneNumber,
       email,
       password: hashPassword,
     });
 
     await newUser.save();
-    res.status(200).json({
+
+    // NEW USER
+    // EMAIL VERIFICATION STEPS
+
+    // AFTER VERIFY SUCCESS newUSer->verified : true.
+    // Save
+    sendMail(
+      email,
+      "welcome to our Ecommerce Project",
+      `Hi, ${userName} Thank you for registring!  `
+    );
+    res.status(201).json({
+      // Use 201 for successful creation
       success: true,
       message: "Registration successful",
     });
   } catch (e) {
-    console.log(e);
+    console.error(e); // Changed to console.error for error logging
     res.status(500).json({
       success: false,
-      message: "Some error occured",
+      message: "An error occurred during registration.",
     });
   }
 };

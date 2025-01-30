@@ -3,9 +3,9 @@ import multer from "multer";
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: "dcfdevaey",
-  api_key: "347655613639249",
-  api_secret: "jbfbW0q-bxHQAP32ZBv0Fcgs2s4",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // Set up multer memory storage for image uploads
